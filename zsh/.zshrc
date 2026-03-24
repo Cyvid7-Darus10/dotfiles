@@ -57,20 +57,24 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza -1 --color=always $realpath'
 
 # ─── Aliases: Modern Replacements ────────────────────────
 alias ls="eza --icons --group-directories-first"
 alias ll="eza -la --icons --group-directories-first"
 alias lt="eza --tree --icons --level=2"
+alias lt3="eza --tree --icons --level=3"
 alias la="eza -a --icons --group-directories-first"
 alias cat="bat --paging=never"
 alias grep="rg"
 alias find="fd"
+alias du="dust"
+alias sed="sd"
+alias rm="trash"
 
 # ─── Aliases: Safety ─────────────────────────────────────
 alias cp="cp -i"
 alias mv="mv -i"
-alias rm="rm -i"
 
 # ─── Aliases: Git ────────────────────────────────────────
 alias g="git"
@@ -88,7 +92,11 @@ alias gst="git stash"
 alias gstp="git stash pop"
 alias lg="lazygit"
 
-# ─── Aliases: Navigation ─────────────────────────────────
+# ─── Aliases: Navigation (zoxide) ────────────────────────
+# z <query>     - jump to best match (e.g., z projects)
+# z <q1> <q2>   - jump with multiple queries (e.g., z side project)
+# zi <query>    - interactive selection with fzf
+# z -           - go back to previous directory
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -99,6 +107,19 @@ alias cls="clear"
 alias reload="exec zsh"
 alias ip="curl -s https://ipinfo.io/ip"
 alias weather="curl -s 'wttr.in?format=3'"
+alias top="btop"
+alias vim="nvim"
+alias vi="nvim"
+
+# ─── Yazi: File Manager (y to enter, q to quit, cwd follows) ─
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
 
 # ─── FZF Configuration ───────────────────────────────────
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
@@ -118,10 +139,11 @@ export BAT_THEME="Catppuccin Mocha"
 
 # ─── Tool Initialization ─────────────────────────────────
 eval "$(starship init zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
 eval "$(mise activate zsh)"
 eval "$(direnv hook zsh)"
+eval "$(atuin init zsh)"
 
 # ─── Machine-specific Config (not committed) ─────────────
 [[ -f "$HOME/.zsh_local" ]] && source "$HOME/.zsh_local"

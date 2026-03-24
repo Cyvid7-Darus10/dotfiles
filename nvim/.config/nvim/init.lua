@@ -74,11 +74,22 @@ require("lazy").setup({
       require("catppuccin").setup({
         flavour = "mocha",
         integrations = {
+          cmp = true,
           treesitter = true,
           gitsigns = true,
           telescope = { enabled = true },
           which_key = true,
           mini = { enabled = true },
+          mason = true,
+          native_lsp = {
+            enabled = true,
+            underlines = {
+              errors = { "undercurl" },
+              hints = { "undercurl" },
+              warnings = { "undercurl" },
+              information = { "undercurl" },
+            },
+          },
         },
       })
       vim.cmd.colorscheme("catppuccin")
@@ -102,6 +113,7 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
       vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help" })
       vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Recent files" })
+      vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Diagnostics" })
     end,
   },
 
@@ -112,7 +124,7 @@ require("lazy").setup({
     config = function()
       require("nvim-treesitter.configs").setup({
         ensure_installed = {
-          "bash", "c", "css", "diff", "html", "javascript", "json",
+          "bash", "c", "css", "diff", "go", "html", "javascript", "json",
           "lua", "markdown", "markdown_inline", "python", "query",
           "regex", "rust", "tsx", "typescript", "vim", "vimdoc", "yaml",
         },
@@ -120,6 +132,151 @@ require("lazy").setup({
         highlight = { enable = true },
         indent = { enable = true },
       })
+    end,
+  },
+
+  -- LSP
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+      { "mason-lspconfig.nvim" },
+    },
+  },
+
+  -- LSP server installer
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "mason.nvim", "nvim-lspconfig" },
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = { "lua_ls", "ts_ls", "pyright" },
+        automatic_installation = true,
+      })
+
+      local lspconfig = require("lspconfig")
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+      if ok then
+        capabilities = cmp_lsp.default_capabilities(capabilities)
+      end
+
+      require("mason-lspconfig").setup_handlers({
+        function(server_name)
+          lspconfig[server_name].setup({ capabilities = capabilities })
+        end,
+        ["lua_ls"] = function()
+          lspconfig.lua_ls.setup({
+            capabilities = capabilities,
+            settings = {
+              Lua = {
+                diagnostics = { globals = { "vim" } },
+                workspace = { checkThirdParty = false },
+              },
+            },
+          })
+        end,
+      })
+
+      -- LSP keymaps (attached to buffer)
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(event)
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = event.buf, desc = desc })
+          end
+          map("gd", vim.lsp.buf.definition, "Go to definition")
+          map("gr", vim.lsp.buf.references, "Go to references")
+          map("gi", vim.lsp.buf.implementation, "Go to implementation")
+          map("K", vim.lsp.buf.hover, "Hover documentation")
+          map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
+          map("<leader>ca", vim.lsp.buf.code_action, "Code action")
+          map("<leader>D", vim.lsp.buf.type_definition, "Type definition")
+        end,
+      })
+    end,
+  },
+
+  -- Autocompletion
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "rafamadriz/friendly-snippets",
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+      require("luasnip.loaders.from_vscode").lazy_load()
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-Space>"] = cmp.mapping.complete(),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+          { name = "path" },
+        }, {
+          { name = "buffer" },
+        }),
+      })
+    end,
+  },
+
+  -- Formatter
+  {
+    "stevearc/conform.nvim",
+    config = function()
+      require("conform").setup({
+        formatters_by_ft = {
+          lua = { "stylua" },
+          javascript = { "prettierd", "prettier", stop_after_first = true },
+          typescript = { "prettierd", "prettier", stop_after_first = true },
+          typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+          javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+          json = { "prettierd", "prettier", stop_after_first = true },
+          css = { "prettierd", "prettier", stop_after_first = true },
+          html = { "prettierd", "prettier", stop_after_first = true },
+          markdown = { "prettierd", "prettier", stop_after_first = true },
+          python = { "black" },
+          go = { "gofmt" },
+          rust = { "rustfmt" },
+        },
+      })
+      vim.keymap.set({ "n", "v" }, "<leader>fm", function()
+        require("conform").format({ async = true, lsp_fallback = true })
+      end, { desc = "Format" })
+    end,
+  },
+
+  -- File explorer
+  {
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("oil").setup({
+        view_options = { show_hidden = true },
+      })
+      vim.keymap.set("n", "-", "<cmd>Oil<CR>", { desc = "Open file explorer" })
     end,
   },
 
@@ -178,6 +335,15 @@ require("lazy").setup({
     main = "ibl",
     config = function()
       require("ibl").setup()
+    end,
+  },
+
+  -- Todo comments
+  {
+    "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      require("todo-comments").setup()
     end,
   },
 })

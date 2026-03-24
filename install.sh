@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# ─── Support one-liner remote install ────────────────────
+# bash -c "$(curl -fsSL https://raw.githubusercontent.com/Cyvid7-Darus10/dotfiles/main/install.sh)"
+if [[ ! -f "$(dirname "${BASH_SOURCE[0]}")/Brewfile" ]]; then
+  echo "Cloning dotfiles..."
+  git clone https://github.com/Cyvid7-Darus10/dotfiles.git "$HOME/dotfiles"
+  cd "$HOME/dotfiles"
+  exec bash ./install.sh
+fi
+
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -10,22 +19,24 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 NC='\033[0m'
 
 info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 success() { echo -e "${GREEN}[OK]${NC} $1"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; }
+step() { echo -e "\n${CYAN}━━━ $1 ━━━${NC}"; }
 
 # ─── Install Homebrew ─────────────────────────────────────
 install_homebrew() {
+  step "Homebrew"
   if command -v brew &>/dev/null; then
     success "Homebrew already installed"
   else
     info "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-    # Add brew to PATH for this session
     if [[ "$OS" == "Darwin" ]]; then
       if [[ "$ARCH" == "arm64" ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -41,6 +52,7 @@ install_homebrew() {
 
 # ─── Install Packages ────────────────────────────────────
 install_packages() {
+  step "Packages (Brewfile)"
   info "Installing packages from Brewfile..."
   brew bundle --file="$DOTFILES/Brewfile" --no-lock
   success "Packages installed"
@@ -48,6 +60,7 @@ install_packages() {
 
 # ─── Install Zinit ────────────────────────────────────────
 install_zinit() {
+  step "Zinit (Zsh Plugin Manager)"
   local ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
   if [[ -d "$ZINIT_HOME" ]]; then
     success "Zinit already installed"
@@ -61,6 +74,7 @@ install_zinit() {
 
 # ─── Install TPM (Tmux Plugin Manager) ───────────────────
 install_tpm() {
+  step "TPM (Tmux Plugin Manager)"
   local TPM_DIR="$HOME/.tmux/plugins/tpm"
   if [[ -d "$TPM_DIR" ]]; then
     success "TPM already installed"
@@ -73,6 +87,7 @@ install_tpm() {
 
 # ─── Backup Existing Configs ─────────────────────────────
 backup_existing() {
+  step "Backup Existing Configs"
   local BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
   local NEEDS_BACKUP=false
 
@@ -104,18 +119,20 @@ backup_existing() {
         mkdir -p "$BACKUP_DIR/$(dirname "$relative")"
         cp "$file" "$BACKUP_DIR/$relative"
         rm "$file"
-        warn "Backed up and removed: $file"
+        warn "Backed up: $file"
       elif [[ -L "$file" ]]; then
         rm "$file"
       fi
     done
-    success "Backup complete"
+    success "Backup complete at $BACKUP_DIR"
+  else
+    success "No existing configs to backup"
   fi
 }
 
 # ─── Stow Packages ───────────────────────────────────────
 stow_packages() {
-  info "Linking dotfiles with GNU Stow..."
+  step "Symlink Configs (GNU Stow)"
   cd "$DOTFILES"
 
   local packages=(zsh tmux nvim starship git bat ghostty lazygit)
@@ -131,6 +148,7 @@ stow_packages() {
 
 # ─── Git Config (Personal Info) ──────────────────────────
 setup_git_identity() {
+  step "Git Identity"
   if [[ -f "$HOME/.gitconfig.local" ]]; then
     success "Git identity already configured (~/.gitconfig.local)"
     return
@@ -151,6 +169,7 @@ EOF
 
 # ─── Set Zsh as Default Shell ─────────────────────────────
 set_default_shell() {
+  step "Default Shell"
   if [[ "$SHELL" == *"zsh"* ]]; then
     success "Zsh is already default shell"
   else
@@ -168,8 +187,7 @@ set_default_shell() {
 # ─── macOS Defaults ───────────────────────────────────────
 setup_macos() {
   if [[ "$OS" != "Darwin" ]]; then return; fi
-
-  info "Applying macOS defaults..."
+  step "macOS Defaults"
 
   # Faster key repeat
   defaults write NSGlobalDomain KeyRepeat -int 2
@@ -178,10 +196,8 @@ setup_macos() {
   # Show hidden files in Finder
   defaults write com.apple.finder AppleShowAllFiles -bool true
 
-  # Show path bar in Finder
+  # Show path bar and status bar in Finder
   defaults write com.apple.finder ShowPathbar -bool true
-
-  # Show status bar in Finder
   defaults write com.apple.finder ShowStatusBar -bool true
 
   # Disable press-and-hold for keys (enable key repeat)
@@ -190,25 +206,58 @@ setup_macos() {
   # Show file extensions
   defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
+  # Disable auto-correct
+  defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+  # Disable smart quotes and dashes (annoying when coding)
+  defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+  defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
   success "macOS defaults applied"
 }
 
 # ─── Install tmux plugins ────────────────────────────────
 install_tmux_plugins() {
+  step "Tmux Plugins"
   if [[ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]]; then
     info "Installing tmux plugins..."
     "$HOME/.tmux/plugins/tpm/bin/install_plugins"
     success "Tmux plugins installed"
+  else
+    warn "TPM not found, skipping tmux plugin install"
+  fi
+}
+
+# ─── Setup Atuin ──────────────────────────────────────────
+setup_atuin() {
+  step "Atuin (Shell History)"
+  if command -v atuin &>/dev/null; then
+    if [[ ! -d "$HOME/.local/share/atuin" ]]; then
+      info "Initializing Atuin..."
+      atuin init zsh > /dev/null 2>&1 || true
+    fi
+    success "Atuin ready"
+  else
+    warn "Atuin not found, skipping"
+  fi
+}
+
+# ─── Build bat cache (for Catppuccin theme) ──────────────
+setup_bat() {
+  step "bat Theme Cache"
+  if command -v bat &>/dev/null; then
+    bat cache --build 2>/dev/null || true
+    success "bat cache built"
   fi
 }
 
 # ─── Main ─────────────────────────────────────────────────
 main() {
   echo ""
-  echo -e "${BLUE}╔══════════════════════════════════════╗${NC}"
-  echo -e "${BLUE}║      Dotfiles Installation           ║${NC}"
-  echo -e "${BLUE}╚══════════════════════════════════════╝${NC}"
-  echo ""
+  echo -e "${CYAN}╔══════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║        Dotfiles Installation             ║${NC}"
+  echo -e "${CYAN}║        github.com/Cyvid7-Darus10        ║${NC}"
+  echo -e "${CYAN}╚══════════════════════════════════════════╝${NC}"
 
   install_homebrew
   install_packages
@@ -220,14 +269,23 @@ main() {
   set_default_shell
   setup_macos
   install_tmux_plugins
+  setup_atuin
+  setup_bat
 
   echo ""
-  success "All done! Restart your terminal or run: exec zsh"
+  echo -e "${CYAN}━━━ Done! ━━━${NC}"
   echo ""
-  info "Post-install notes:"
-  echo "  - In tmux, press Ctrl+Space then I to install tmux plugins"
-  echo "  - Machine-specific config goes in ~/.zsh_local"
-  echo "  - Git identity is in ~/.gitconfig.local"
+  success "Installation complete!"
+  echo ""
+  info "Next steps:"
+  echo "  1. Restart your terminal or run: exec zsh"
+  echo "  2. In tmux, press Ctrl+Space then I to install plugins"
+  echo "  3. In Neovim, plugins will auto-install on first launch"
+  echo ""
+  info "Customization:"
+  echo "  - Machine-specific shell config: ~/.zsh_local"
+  echo "  - Git identity: ~/.gitconfig.local"
+  echo "  - Atuin settings: atuin register / atuin login (optional sync)"
   echo ""
 }
 
