@@ -14,7 +14,7 @@ brew "fd"            # find replacement
 brew "git-delta"     # diff replacement with side-by-side view
 brew "sd"            # sed replacement with intuitive syntax
 brew "dust"          # du replacement with visual output
-brew "trash-cli"     # Safe rm - sends to trash instead of delete
+brew "trash"         # Safe rm - sends to trash instead of delete
 
 # ─── Shell Enhancement ───────────────────────────────────
 brew "atuin"         # Shell history with SQLite, fuzzy search, sync

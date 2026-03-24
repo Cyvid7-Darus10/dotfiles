@@ -33,12 +33,6 @@ vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 vim.keymap.set("n", "<leader>w", "<cmd>w<CR>", { desc = "Save" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<CR>", { desc = "Quit" })
 
--- Better window navigation
-vim.keymap.set("n", "<C-h>", "<C-w>h")
-vim.keymap.set("n", "<C-j>", "<C-w>j")
-vim.keymap.set("n", "<C-k>", "<C-w>k")
-vim.keymap.set("n", "<C-l>", "<C-w>l")
-
 -- Move lines in visual mode
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
@@ -54,7 +48,7 @@ vim.keymap.set("x", "<leader>p", '"_dP')
 
 -- ─── Bootstrap lazy.nvim ─────────────────────────────────
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
     "git", "clone", "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
@@ -133,14 +127,6 @@ require("lazy").setup({
         indent = { enable = true },
       })
     end,
-  },
-
-  -- LSP
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      { "mason-lspconfig.nvim" },
-    },
   },
 
   -- LSP server installer
@@ -263,7 +249,7 @@ require("lazy").setup({
         },
       })
       vim.keymap.set({ "n", "v" }, "<leader>fm", function()
-        require("conform").format({ async = true, lsp_fallback = true })
+        require("conform").format({ async = true, lsp_format = "fallback" })
       end, { desc = "Format" })
     end,
   },
@@ -325,7 +311,6 @@ require("lazy").setup({
     config = function()
       require("mini.pairs").setup()      -- Auto pairs
       require("mini.surround").setup()   -- Surround actions
-      require("mini.comment").setup()    -- gcc to comment
     end,
   },
 

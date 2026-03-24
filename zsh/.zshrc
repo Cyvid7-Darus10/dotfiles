@@ -66,15 +66,11 @@ alias lt="eza --tree --icons --level=2"
 alias lt3="eza --tree --icons --level=3"
 alias la="eza -a --icons --group-directories-first"
 alias cat="bat --paging=never"
-alias grep="rg"
-alias find="fd"
-alias du="dust"
-alias sed="sd"
-alias rm="trash"
 
 # ─── Aliases: Safety ─────────────────────────────────────
 alias cp="cp -i"
 alias mv="mv -i"
+alias rm="trash"
 
 # ─── Aliases: Git ────────────────────────────────────────
 alias g="git"
@@ -105,9 +101,8 @@ alias -- -="cd -"
 # ─── Aliases: Misc ───────────────────────────────────────
 alias cls="clear"
 alias reload="exec zsh"
-alias ip="curl -s https://ipinfo.io/ip"
+alias myip="curl -s https://ipinfo.io/ip"
 alias weather="curl -s 'wttr.in?format=3'"
-alias top="btop"
 alias vim="nvim"
 alias vi="nvim"
 
@@ -118,7 +113,7 @@ function y() {
   if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
     builtin cd -- "$cwd"
   fi
-  rm -f -- "$tmp"
+  command rm -f -- "$tmp"
 }
 
 # ─── FZF Configuration ───────────────────────────────────
@@ -138,12 +133,12 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 export BAT_THEME="Catppuccin Mocha"
 
 # ─── Tool Initialization ─────────────────────────────────
-eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
-eval "$(fzf --zsh)"
-eval "$(mise activate zsh)"
-eval "$(direnv hook zsh)"
-eval "$(atuin init zsh)"
+command -v starship &>/dev/null && eval "$(starship init zsh)"
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+command -v fzf &>/dev/null && eval "$(fzf --zsh)"
+command -v mise &>/dev/null && eval "$(mise activate zsh)"
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
+command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 
 # ─── Machine-specific Config (not committed) ─────────────
 [[ -f "$HOME/.zsh_local" ]] && source "$HOME/.zsh_local"

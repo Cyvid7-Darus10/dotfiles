@@ -5,11 +5,13 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
 info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 success() { echo -e "${GREEN}[OK]${NC} $1"; }
+error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 echo ""
 echo -e "${RED}Unlinking dotfiles...${NC}"
@@ -18,9 +20,12 @@ echo ""
 cd "$DOTFILES"
 for pkg in zsh tmux nvim starship git bat ghostty lazygit; do
   if [[ -d "$pkg" ]]; then
-    stow -v --delete --target="$HOME" "$pkg" 2>&1 | while read -r line; do
-      echo "  $line"
-    done
+    local_output="$(stow -v --delete --target="$HOME" "$pkg" 2>&1)" || {
+      error "Failed to unstow: $pkg"
+      echo "$local_output"
+      continue
+    }
+    [[ -n "$local_output" ]] && echo "$local_output" | sed 's/^/  /'
     success "Unstowed: $pkg"
   fi
 done

@@ -3,11 +3,17 @@ set -euo pipefail
 
 # ─── Support one-liner remote install ────────────────────
 # bash -c "$(curl -fsSL https://raw.githubusercontent.com/Cyvid7-Darus10/dotfiles/main/install.sh)"
-if [[ ! -f "$(dirname "${BASH_SOURCE[0]}")/Brewfile" ]]; then
-  echo "Cloning dotfiles..."
-  git clone https://github.com/Cyvid7-Darus10/dotfiles.git "$HOME/dotfiles"
-  cd "$HOME/dotfiles"
-  exec bash ./install.sh
+if [[ ! -f "$(dirname "${BASH_SOURCE[0]:-./install.sh}")/Brewfile" ]]; then
+  if [[ -d "$HOME/dotfiles" ]]; then
+    echo "Updating existing dotfiles..."
+    cd "$HOME/dotfiles"
+    git pull
+  else
+    echo "Cloning dotfiles..."
+    git clone https://github.com/Cyvid7-Darus10/dotfiles.git "$HOME/dotfiles"
+    cd "$HOME/dotfiles"
+  fi
+  exec bash ./install.sh "$@"
 fi
 
 DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -138,9 +144,13 @@ stow_packages() {
   local packages=(zsh tmux nvim starship git bat ghostty lazygit)
   for pkg in "${packages[@]}"; do
     if [[ -d "$pkg" ]]; then
-      stow -v --restow --target="$HOME" "$pkg" 2>&1 | while read -r line; do
-        echo "  $line"
-      done
+      local output
+      output="$(stow -v --restow --target="$HOME" "$pkg" 2>&1)" || {
+        error "Failed to stow: $pkg"
+        echo "$output"
+        continue
+      }
+      [[ -n "$output" ]] && echo "$output" | sed 's/^/  /'
       success "Stowed: $pkg"
     fi
   done
@@ -154,10 +164,18 @@ setup_git_identity() {
     return
   fi
 
+  # Skip in non-interactive mode (e.g., piped install)
+  if [[ ! -t 0 ]]; then
+    warn "Non-interactive mode -- skipping Git identity setup"
+    info "Run this later: git config --file ~/.gitconfig.local user.name 'Your Name'"
+    info "                git config --file ~/.gitconfig.local user.email 'you@example.com'"
+    return
+  fi
+
   echo ""
   info "Setting up Git identity..."
-  read -rp "  Git name: " git_name
-  read -rp "  Git email: " git_email
+  read -rp "  Git name: " git_name </dev/tty
+  read -rp "  Git email: " git_email </dev/tty
 
   cat > "$HOME/.gitconfig.local" <<EOF
 [user]
@@ -173,9 +191,14 @@ set_default_shell() {
   if [[ "$SHELL" == *"zsh"* ]]; then
     success "Zsh is already default shell"
   else
-    info "Setting Zsh as default shell..."
     local ZSH_PATH
-    ZSH_PATH="$(which zsh)"
+    ZSH_PATH="$(command -v zsh)"
+    if [[ ! -t 0 ]]; then
+      warn "Non-interactive mode -- skipping chsh (may require password)"
+      info "Run this later: chsh -s $ZSH_PATH"
+      return
+    fi
+    info "Setting Zsh as default shell..."
     if ! grep -q "$ZSH_PATH" /etc/shells; then
       echo "$ZSH_PATH" | sudo tee -a /etc/shells
     fi
@@ -254,10 +277,10 @@ setup_bat() {
 # ─── Main ─────────────────────────────────────────────────
 main() {
   echo ""
-  echo -e "${CYAN}╔══════════════════════════════════════════╗${NC}"
-  echo -e "${CYAN}║        Dotfiles Installation             ║${NC}"
-  echo -e "${CYAN}║        github.com/Cyvid7-Darus10        ║${NC}"
-  echo -e "${CYAN}╚══════════════════════════════════════════╝${NC}"
+  echo -e "${CYAN}╔════════════════════════════════════════╗${NC}"
+  echo -e "${CYAN}║       Dotfiles Installation            ║${NC}"
+  echo -e "${CYAN}║       github.com/Cyvid7-Darus10       ║${NC}"
+  echo -e "${CYAN}╚════════════════════════════════════════╝${NC}"
 
   install_homebrew
   install_packages

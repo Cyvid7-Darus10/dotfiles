@@ -49,14 +49,10 @@ Every old command is aliased to a faster, better alternative:
 | `ll` | **eza -la** | Long list with all files |
 | `lt` | **eza --tree** | Tree view (2 levels) |
 | `cat` | **bat** | Syntax highlighting |
-| `grep` | **ripgrep** | 10-100x faster search |
-| `find` | **fd** | Intuitive, fast |
-| `diff` | **delta** | Side-by-side with syntax colors |
-| `du` | **dust** | Visual disk usage |
-| `sed` | **sd** | Intuitive find-and-replace |
 | `rm` | **trash** | Sends to trash (safe delete) |
-| `top` | **btop** | Beautiful system monitor |
-| `vim` | **nvim** | Neovim with IDE features |
+| `vim` / `vi` | **nvim** | Neovim with IDE features |
+
+Tools like **ripgrep** (`rg`), **fd**, **dust**, **sd**, and **btop** are installed but use their own names -- they don't shadow core system commands (`grep`, `find`, `du`, `sed`, `top`) to avoid breaking scripts.
 
 <details>
 <summary><strong>Other tools installed</strong></summary>
@@ -64,6 +60,12 @@ Every old command is aliased to a faster, better alternative:
 | Tool | What It Does |
 |------|-------------|
 | **fzf** | Fuzzy finder (files, history, directories) |
+| **ripgrep** (`rg`) | Fast code search (use instead of `grep`) |
+| **fd** | Fast file finder (use instead of `find`) |
+| **dust** | Visual disk usage (use instead of `du`) |
+| **sd** | Intuitive find-and-replace (use instead of `sed`) |
+| **btop** | Beautiful system monitor (use instead of `top`) |
+| **delta** | Side-by-side git diffs with syntax highlighting |
 | **gh** | GitHub CLI (PRs, issues from terminal) |
 | **mise** | Version manager (replaces nvm, pyenv, rbenv) |
 | **direnv** | Per-directory environment variables |
@@ -250,8 +252,8 @@ Leader key is **`Space`**.
 
 | Key | Action |
 |-----|--------|
-| `gcc` | Toggle line comment |
-| `gc` (visual) | Comment selection |
+| `gcc` | Toggle line comment (built-in) |
+| `gc` (visual) | Comment selection (built-in) |
 | `ys{motion}{char}` | Add surround (e.g., `ysiw"`) |
 | `ds{char}` | Delete surround |
 | `cs{old}{new}` | Change surround |
@@ -276,7 +278,7 @@ Leader key is **`Space`**.
 | **Snippets** | LuaSnip + friendly-snippets (VS Code library) |
 | **Todo highlights** | todo-comments (TODO/FIXME/HACK/NOTE) |
 | **Indent guides** | indent-blankline |
-| **Utilities** | mini.nvim (auto pairs, surround, commenting) |
+| **Utilities** | mini.nvim (auto pairs, surround) |
 
 ### LSP servers (auto-installed)
 
