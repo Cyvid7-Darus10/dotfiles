@@ -139,5 +139,3 @@ command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 
 # ─── Machine-specific Config (not committed) ─────────────
 [[ -f "$HOME/.zsh_local" ]] && source "$HOME/.zsh_local"
-
-[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
