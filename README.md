@@ -47,6 +47,10 @@ cd ~/dotfiles && ./install.sh
 
 > The installer is **idempotent** -- it backs up existing configs, installs everything, and symlinks all configs. Safe to re-run.
 
+<p align="center">
+  <img src="https://vhs.charm.sh/vhs-5e7Ak3W6uAdS7Cph9X2zqk.gif" alt="Installation" width="800">
+</p>
+
 ---
 
 ## What You Get
@@ -302,6 +306,16 @@ dotfiles/
 ```
 
 Each directory is a [GNU Stow](https://www.gnu.org/software/stow/) package -- Stow creates symlinks from the repo into `$HOME`.
+
+---
+
+## Tests
+
+```bash
+bash tests/test_install.sh
+```
+
+Validates install script integrity: deprecated flags, required functions, stow directories, strict mode, and security checks.
 
 ---
 

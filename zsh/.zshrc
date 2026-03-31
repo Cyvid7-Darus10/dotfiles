@@ -129,9 +129,6 @@ export FZF_ALT_C_COMMAND='fd --type d --hidden --exclude .git'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range=:200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --color=always {} | head -200'"
 
-# ─── bat Configuration ───────────────────────────────────
-export BAT_THEME="Catppuccin Mocha"
-
 # ─── Tool Initialization ─────────────────────────────────
 command -v starship &>/dev/null && eval "$(starship init zsh)"
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
@@ -143,3 +140,5 @@ command -v atuin &>/dev/null && eval "$(atuin init zsh)"
 
 # ─── Machine-specific Config (not committed) ─────────────
 [[ -f "$HOME/.zsh_local" ]] && source "$HOME/.zsh_local"
+
+[[ -f "$HOME/.local/bin/env" ]] && . "$HOME/.local/bin/env"
