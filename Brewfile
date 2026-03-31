@@ -31,8 +31,6 @@ brew "jq"            # JSON processor
 brew "yq"            # YAML/TOML processor
 brew "direnv"        # Per-directory environment variables
 brew "mise"          # Polyglot version manager (node, python, etc.)
-brew "fnm"           # Fast Node Manager (auto-switches node versions)
-brew "tree"          # Directory tree viewer
 brew "wget"          # HTTP downloader
 brew "hyperfine"     # Command-line benchmarking tool
 
