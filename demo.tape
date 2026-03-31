@@ -3,64 +3,51 @@ Output demo.gif
 Set Shell "zsh"
 Set FontSize 14
 Set Width 1200
-Set Height 600
+Set Height 650
 Set Theme "Catppuccin Mocha"
 Set Padding 20
 Set TypingSpeed 40ms
+Set CursorBlink false
 
-Type "# Welcome to my dotfiles setup"
+# Initialize environment invisibly
+Hide
+Type "source ~/.zshenv 2>/dev/null; source ~/.zshrc 2>/dev/null; cd ~/dotfiles; clear"
 Enter
+Sleep 4s
+Show
+
+# Wait for starship prompt to render
 Sleep 1s
 
+# eza: file listing with icons and git status
 Type "eza -la --icons --git"
 Enter
-Sleep 2s
+Sleep 3s
 
-Type "# Smart navigation with zoxide"
+# eza: tree view of dotfiles structure
+Type "eza --tree --level=1 --icons"
 Enter
-Sleep 500ms
+Sleep 3s
 
+# bat: syntax highlighted file preview
+Type "bat --line-range=1:20 --paging=never install.sh"
+Enter
+Sleep 3s
+
+# git log with graph
+Type "git log --oneline --graph --decorate -8"
+Enter
+Sleep 3s
+
+# zoxide: smart directory navigation
+Type "z ~"
+Enter
+Sleep 1s
 Type "z dotfiles"
 Enter
-Sleep 1s
-
-Type "# Modern CLI replacements"
-Enter
-Sleep 500ms
-
-Type "bat --style=header,grid install.sh"
-Enter
 Sleep 2s
 
-Type "# Fuzzy search with fzf"
-Enter
-Sleep 500ms
-
-Type "ls | fzf --height=10"
-Sleep 1s
-Enter
-Sleep 1s
-
-Type "# Git workflow with lazygit aliases"
-Enter
-Sleep 500ms
-
-Type "gs"
-Enter
-Sleep 2s
-
-Type "# Beautiful git diffs with delta"
-Enter
-Sleep 500ms
-
-Type "gd"
-Enter
-Sleep 2s
-
-Type "# That's it! One command to install everything:"
-Enter
-Sleep 500ms
-
-Type 'echo "bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Cyvid7-Darus10/dotfiles/main/install.sh)\""'
+# Done
+Type "echo 'Ready to code.'"
 Enter
 Sleep 3s
