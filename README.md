@@ -27,7 +27,7 @@
 <br>
 
 <p align="center">
-  <img src="./demo.gif" alt="Demo" width="800">
+  <img src="https://vhs.charm.sh/vhs-1RJxf25xlKWY4i25IxxaDj.gif" alt="Demo" width="800">
 </p>
 
 ---
