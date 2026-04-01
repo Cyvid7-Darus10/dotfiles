@@ -7,7 +7,11 @@
 </h1>
 
 <p align="center">
-  <b>One command to set up a fully configured terminal environment on any machine.</b>
+  <b>Turn your boring terminal into a beautiful, modern powerhouse — with one command.</b>
+</p>
+
+<p align="center">
+  No manual setup. No config headaches. Just copy, paste, and you're done.
 </p>
 
 <p align="center">
@@ -34,18 +38,20 @@
 
 ## Quick Start
 
+**Option 1** — One-liner (just paste this into your terminal):
+
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Cyvid7-Darus10/dotfiles/main/install.sh)"
 ```
 
-Or clone manually:
+**Option 2** — Clone and run:
 
 ```bash
 git clone https://github.com/Cyvid7-Darus10/dotfiles.git ~/dotfiles
 cd ~/dotfiles && ./install.sh
 ```
 
-> The installer is **idempotent** -- it backs up existing configs, installs everything, and symlinks all configs. Safe to re-run.
+That's it. The installer handles everything automatically — installs tools, backs up your existing configs, and sets up the new environment. Safe to re-run anytime.
 
 <p align="center">
   <img src="https://vhs.charm.sh/vhs-5e7Ak3W6uAdS7Cph9X2zqk.gif" alt="Installation" width="800">
@@ -53,205 +59,210 @@ cd ~/dotfiles && ./install.sh
 
 ---
 
-## What You Get
+## Why Use This?
 
-| Category | Tool | Purpose |
-|:---------|:-----|:--------|
-| **Terminal** | [Ghostty](https://ghostty.org/) | GPU-accelerated, Metal-native terminal |
-| **Shell** | Zsh + [Zinit](https://github.com/zdharma-continuum/zinit) | Async plugin loading, blazing fast startup |
-| **Prompt** | [Starship](https://starship.rs/) | Context-aware prompt (git, languages, docker) |
-| **Multiplexer** | [tmux](https://github.com/tmux/tmux) | Persistent sessions, pane splitting |
-| **Editor** | [Neovim](https://neovim.io/) | Full IDE: LSP, autocomplete, fuzzy finder |
-| **Navigation** | [zoxide](https://github.com/ajeetdsouza/zoxide) | Smart `cd` that learns your directories |
-| **File Manager** | [yazi](https://github.com/sxyazi/yazi) | Terminal file browser with previews |
-| **History** | [Atuin](https://github.com/atuinsh/atuin) | SQLite-backed searchable shell history |
-| **Git** | [lazygit](https://github.com/jesseduffield/lazygit) + [delta](https://github.com/dandavella/delta) | Visual TUI + beautiful diffs |
-| **Theme** | Catppuccin Mocha | Consistent palette across every tool |
-| **Font** | JetBrains Mono Nerd Font | Ligatures + icons everywhere |
+Your default terminal is plain, ugly, and hard to work with. This setup gives you:
+
+- **A stunning look** — consistent Catppuccin Mocha theme across every tool, with icons and syntax highlighting everywhere
+- **Smarter defaults** — `ls` shows file icons and git status, `cat` highlights code, `rm` sends to trash instead of deleting forever
+- **Instant navigation** — type `z projects` to jump to your projects folder from anywhere, no more `cd ../../../`
+- **Fuzzy search everything** — press `Ctrl+T` to find any file, `Ctrl+R` to search your command history
+- **A full code editor in your terminal** — Neovim with autocomplete, go-to-definition, and file search built in
+- **Split-screen multitasking** — tmux lets you run multiple terminals side by side in one window
+- **45+ tools installed automatically** — no hunting down packages one by one
 
 ---
 
-## Modern CLI Replacements
+## What's Included
 
-Every legacy command is aliased to a faster, better alternative:
+| What | Tool | What it does |
+|:-----|:-----|:-------------|
+| **Terminal** | [Ghostty](https://ghostty.org/) | Fast, GPU-accelerated terminal app |
+| **Shell** | Zsh + [Zinit](https://github.com/zdharma-continuum/zinit) | Smarter shell with plugins that load instantly |
+| **Prompt** | [Starship](https://starship.rs/) | Shows git branch, language versions, and status at a glance |
+| **Split Screen** | [tmux](https://github.com/tmux/tmux) | Run multiple terminals in one window, keep sessions alive |
+| **Editor** | [Neovim](https://neovim.io/) | Full code editor with autocomplete and file search |
+| **Navigation** | [zoxide](https://github.com/ajeetdsouza/zoxide) | Jump to any folder by typing part of its name |
+| **File Manager** | [yazi](https://github.com/sxyazi/yazi) | Browse files visually in the terminal |
+| **History** | [Atuin](https://github.com/atuinsh/atuin) | Search through every command you've ever typed |
+| **Git** | [lazygit](https://github.com/jesseduffield/lazygit) + [delta](https://github.com/dandavella/delta) | Visual git interface + beautiful code diffs |
+| **Theme** | Catppuccin Mocha | Consistent colors across every tool |
+| **Font** | JetBrains Mono Nerd Font | Clean font with icons built in |
 
-| You type | Runs | Upgrade |
-|:---------|:-----|:--------|
-| `ls` | [eza](https://github.com/eza-community/eza) | Icons, colors, git status |
-| `ll` | `eza -la` | Long listing with hidden files |
-| `lt` | `eza --tree` | Tree view (2 levels deep) |
-| `cat` | [bat](https://github.com/sharkdp/bat) | Syntax highlighting + line numbers |
-| `rm` | [trash](https://github.com/sindresorhus/trash-cli) | Safe delete (sends to system trash) |
-| `vim` / `vi` | [nvim](https://neovim.io/) | Full IDE experience |
+---
+
+## Your Commands, Upgraded
+
+Same commands you already know — but now they look and work better:
+
+| You type | What happens | Before vs After |
+|:---------|:-------------|:----------------|
+| `ls` | [eza](https://github.com/eza-community/eza) | Plain text → icons, colors, git status |
+| `ll` | `eza -la` | Hidden files shown beautifully |
+| `lt` | `eza --tree` | See folder structure as a tree |
+| `cat` | [bat](https://github.com/sharkdp/bat) | Plain text → syntax-highlighted code |
+| `rm` | [trash](https://github.com/sindresorhus/trash-cli) | Permanent delete → safe trash (recoverable) |
+| `vim` / `vi` | [nvim](https://neovim.io/) | Basic editor → full IDE |
 
 <details>
-<summary><strong>Additional tools installed</strong></summary>
+<summary><strong>45+ tools included — see the full list</strong></summary>
 
-| Tool | Purpose |
-|:-----|:--------|
-| [fzf](https://github.com/junegunn/fzf) | Fuzzy finder for files, history, directories |
-| [ripgrep](https://github.com/BurntSushi/ripgrep) (`rg`) | Fast recursive code search |
-| [fd](https://github.com/sharkdp/fd) | Fast, user-friendly file finder |
-| [dust](https://github.com/bootandy/dust) | Intuitive disk usage analyzer |
-| [sd](https://github.com/chmln/sd) | Simple find-and-replace |
-| [btop](https://github.com/aristocratos/btop) | Resource monitor with a beautiful TUI |
-| [delta](https://github.com/dandavella/delta) | Git diffs with syntax highlighting |
-| [gh](https://cli.github.com/) | GitHub CLI for PRs, issues, repos |
-| [mise](https://mise.jdx.dev/) | Polyglot version manager (node, python, go, etc.) |
-| [direnv](https://direnv.net/) | Per-directory environment variables |
-| [tldr](https://tldr.sh/) | Simplified, example-driven man pages |
-| [jq](https://stedolan.github.io/jq/) / [yq](https://github.com/mikefarah/yq) | JSON / YAML processors |
-| [hyperfine](https://github.com/sharkdp/hyperfine) | Command-line benchmarking |
+| Tool | What it does |
+|:-----|:-------------|
+| [fzf](https://github.com/junegunn/fzf) | Fuzzy finder — search files, history, and directories instantly |
+| [ripgrep](https://github.com/BurntSushi/ripgrep) (`rg`) | Search inside files — way faster than `grep` |
+| [fd](https://github.com/sharkdp/fd) | Find files by name — simpler and faster than `find` |
+| [dust](https://github.com/bootandy/dust) | See what's eating your disk space |
+| [sd](https://github.com/chmln/sd) | Find-and-replace text in files |
+| [btop](https://github.com/aristocratos/btop) | Beautiful system monitor (CPU, memory, network) |
+| [delta](https://github.com/dandavella/delta) | Color-coded git diffs with syntax highlighting |
+| [gh](https://cli.github.com/) | GitHub from the terminal — PRs, issues, repos |
+| [mise](https://mise.jdx.dev/) | Manage language versions (Node, Python, Go, etc.) |
+| [direnv](https://direnv.net/) | Auto-load environment variables per project |
+| [tldr](https://tldr.sh/) | Simple, example-based help pages (better than `man`) |
+| [jq](https://stedolan.github.io/jq/) / [yq](https://github.com/mikefarah/yq) | Process JSON and YAML from the terminal |
+| [hyperfine](https://github.com/sharkdp/hyperfine) | Benchmark how fast commands run |
 
-> These tools use their own names -- they don't shadow core commands (`grep`, `find`, `du`, `sed`, `top`) to avoid breaking existing scripts.
+> These tools use their own names — they don't replace core commands (`grep`, `find`, `du`, `sed`, `top`) so nothing breaks.
 
 </details>
 
 ---
 
-## Key Bindings
+## Keyboard Shortcuts
 
-### Shell Navigation
+You don't need to memorize everything — just these essentials to get started:
 
-| Shortcut | Action |
-|:---------|:-------|
-| `z <query>` | Jump to best-matching directory |
-| `zi` | Interactive directory picker (fzf) |
-| `y` | Open yazi file manager |
-| `..` / `...` / `....` | Go up 1 / 2 / 3 directories |
-| `Ctrl+T` | Fuzzy find a file |
-| `Alt+C` | Fuzzy cd into a directory |
-| `Ctrl+R` | Atuin history search |
+### Everyday Shortcuts
 
-### tmux
+| Shortcut | What it does |
+|:---------|:-------------|
+| `z <name>` | Jump to any folder by typing part of its name |
+| `y` | Open a visual file browser |
+| `..` / `...` | Go up 1 or 2 directories |
+| `Ctrl+T` | Fuzzy search for any file |
+| `Ctrl+R` | Search your command history |
+| `lg` | Open a visual git interface |
+| `weather` | Check the weather |
 
-Prefix key: **`Ctrl+Space`**
+### tmux (split-screen multitasking)
 
-| Shortcut | Action |
-|:---------|:-------|
-| `Ctrl+h/j/k/l` | Navigate panes (works in Neovim too) |
-| `Alt+H` / `Alt+L` | Previous / next window |
-| `prefix + \|` | Split vertically |
-| `prefix + -` | Split horizontally |
-| `prefix + c` | New window |
-| `prefix + o` | Session picker (fzf + zoxide) |
-| `prefix + u` | Open URLs from terminal output |
+Prefix key: **`Ctrl+Space`** (press this first, then the shortcut)
+
+| Shortcut | What it does |
+|:---------|:-------------|
+| `Ctrl+h/j/k/l` | Move between panels |
+| `prefix + \|` | Split screen vertically |
+| `prefix + -` | Split screen horizontally |
+| `prefix + c` | Open a new tab |
+| `Alt+H` / `Alt+L` | Switch between tabs |
 
 <details>
-<summary><strong>All tmux bindings</strong></summary>
+<summary><strong>More tmux shortcuts</strong></summary>
 
-| Shortcut | Action |
-|:---------|:-------|
-| `prefix + H/J/K/L` | Resize panes |
+| Shortcut | What it does |
+|:---------|:-------------|
+| `prefix + o` | Session picker (fzf + zoxide) |
+| `prefix + u` | Open URLs from terminal output |
+| `prefix + H/J/K/L` | Resize panels |
 | `prefix + [` | Enter copy mode (vi keys) |
 | `v` (copy mode) | Begin selection |
-| `y` (copy mode) | Yank to system clipboard |
+| `y` (copy mode) | Copy to clipboard |
 | `prefix + Ctrl+s` | Save session |
 | `prefix + Ctrl+r` | Restore session |
 | `prefix + I` | Install plugins |
 
 </details>
 
-### Neovim
+### Neovim (code editor)
 
-Leader key: **`Space`**
+Leader key: **`Space`** (press this first, then the shortcut)
 
-| Shortcut | Action |
-|:---------|:-------|
-| `<leader>ff` | Find files |
-| `<leader>fg` | Live grep |
-| `<leader>fb` | Open buffers |
-| `<leader>fr` | Recent files |
-| `-` | File explorer (oil.nvim) |
-| `<leader>w` | Save |
-| `<leader>fm` | Format file |
+| Shortcut | What it does |
+|:---------|:-------------|
+| `Space ff` | Find a file |
+| `Space fg` | Search inside files |
+| `Space w` | Save |
+| `-` | Open file explorer |
+| `gd` | Jump to where a function is defined |
+| `K` | Show documentation popup |
 
 <details>
-<summary><strong>All Neovim bindings</strong></summary>
+<summary><strong>More Neovim shortcuts</strong></summary>
 
 **Navigation**
 
-| Shortcut | Action |
-|:---------|:-------|
-| `Ctrl+h/j/k/l` | Navigate splits (and tmux panes) |
-| `Ctrl+d` / `Ctrl+u` | Half-page scroll (centered) |
-| `J` / `K` (visual) | Move selected lines |
+| Shortcut | What it does |
+|:---------|:-------------|
+| `Ctrl+h/j/k/l` | Move between splits (and tmux panels) |
+| `Ctrl+d` / `Ctrl+u` | Scroll half a page down / up |
+| `Space fb` | Switch between open files |
+| `Space fr` | Open recent files |
 
-**LSP**
+**Code Intelligence**
 
-| Shortcut | Action |
-|:---------|:-------|
-| `gd` | Go to definition |
-| `gr` | Go to references |
+| Shortcut | What it does |
+|:---------|:-------------|
+| `gr` | Find all references |
 | `gi` | Go to implementation |
-| `K` | Hover documentation |
-| `<leader>rn` | Rename symbol |
-| `<leader>ca` | Code action |
-| `<leader>fd` | Diagnostics |
+| `Space rn` | Rename a symbol everywhere |
+| `Space ca` | Show code actions (quick fixes) |
+| `Space fd` | Show all warnings and errors |
+| `Space fm` | Auto-format the file |
 
 **Editing**
 
-| Shortcut | Action |
-|:---------|:-------|
-| `gcc` | Toggle line comment |
-| `gc` (visual) | Comment selection |
-| `ys{motion}{char}` | Add surround |
-| `ds{char}` | Delete surround |
-| `cs{old}{new}` | Change surround |
+| Shortcut | What it does |
+|:---------|:-------------|
+| `gcc` | Toggle comment on a line |
+| `gc` (visual) | Comment selected lines |
 
 </details>
 
 ---
 
-## Git Workflow
+## Git Shortcuts
 
-### Aliases
+Short aliases so you type less:
 
-| Alias | Command |
-|:------|:--------|
-| `gs` | `git status` |
-| `ga` | `git add` |
-| `gc` / `gcm` | `git commit` / `git commit -m` |
-| `gp` / `gpl` | `git push` / `git pull` |
-| `gco` / `gcob` | `git checkout` / `git checkout -b` |
-| `gd` | `git diff` (side-by-side with delta) |
-| `gl` | Pretty log graph |
-| `lg` | Open lazygit |
+| You type | What it does |
+|:---------|:-------------|
+| `gs` | Check status |
+| `ga` | Stage files |
+| `gcm "message"` | Commit with a message |
+| `gp` / `gpl` | Push / pull |
+| `gd` | See changes (color-coded, side-by-side) |
+| `gl` | Pretty commit history graph |
+| `lg` | Open lazygit (visual git interface) |
 
-### Config Highlights
-
-- **Delta** diffs with syntax highlighting and Catppuccin theme
-- Auto-rebase on pull, auto-setup remote tracking
-- **rerere** enabled (remembers conflict resolutions)
-- Identity stored in `~/.gitconfig.local` (not tracked)
+Git is also pre-configured with beautiful color-coded diffs, auto-rebase on pull, and conflict resolution memory — all out of the box.
 
 ---
 
-## Customization
+## Make It Yours
 
-### Machine-specific config
+### Add your own shell settings
 
-Create `~/.zsh_local` for per-machine overrides (not tracked):
+Create `~/.zsh_local` — this file is yours and won't be overwritten by updates:
 
 ```bash
 export AWS_PROFILE=production
-export PATH="$HOME/custom-tools/bin:$PATH"
 alias deploy="./scripts/deploy.sh"
 ```
 
-### Git identity
+### Set your Git name and email
 
-Auto-created by installer. Edit anytime:
+The installer asks you during setup, but you can change it anytime:
 
 ```bash
 git config --file ~/.gitconfig.local user.name "Your Name"
 git config --file ~/.gitconfig.local user.email "you@example.com"
 ```
 
-### Add packages
+### Install more packages
 
 ```bash
-# Edit Brewfile, then:
+# Add a line to Brewfile, then:
 brew bundle --file=~/dotfiles/Brewfile
 ```
 
@@ -261,71 +272,51 @@ brew bundle --file=~/dotfiles/Brewfile
 mise use node@20        # Node.js
 mise use python@3.12    # Python
 mise use go@latest      # Go
-mise ls                 # List installed
+mise ls                 # See what's installed
 ```
 
 ---
 
 ## What the Installer Does
 
+Everything is automatic. Here's what happens behind the scenes:
+
 ```
- 1. Install Homebrew (if missing)
- 2. Install all packages from Brewfile
- 3. Install Zinit (Zsh plugin manager)
- 4. Install TPM (tmux plugin manager)
- 5. Backup existing configs to ~/.dotfiles_backup/<timestamp>/
- 6. Symlink all configs via GNU Stow
- 7. Prompt for Git identity (saved to ~/.gitconfig.local)
- 8. Set Zsh as default shell
- 9. Apply macOS defaults (faster key repeat, show hidden files, etc.)
-10. Install tmux plugins
-11. Initialize Atuin history database
-12. Build bat theme cache
+ 1. Install Homebrew (macOS package manager, if missing)
+ 2. Install all 45+ tools from the package list
+ 3. Set up shell plugins (Zinit) and tmux plugins (TPM)
+ 4. Back up your existing configs (nothing gets lost)
+ 5. Link all new configs into place
+ 6. Ask for your Git name and email
+ 7. Set Zsh as your default shell
+ 8. Apply better macOS defaults (faster key repeat, show hidden files)
+ 9. Initialize shell history database and theme cache
 ```
+
+Your original configs are saved to `~/.dotfiles_backup/` with a timestamp, so you can always go back.
 
 ---
 
-## Directory Structure
+## Project Structure
 
 ```
 dotfiles/
-├── install.sh              # Bootstrap script (supports curl one-liner)
-├── uninstall.sh            # Remove all symlinks
-├── Brewfile                # Package manifest
-├── demo.tape               # VHS script for demo GIF
-├── tests/                  # Test suite
-│   └── test_install.sh
+├── install.sh              # The installer (run this)
+├── uninstall.sh            # Undo everything
+├── Brewfile                # List of tools to install
 ├── zsh/                    # Shell config, plugins, aliases
-├── tmux/                   # tmux config + plugins
-├── nvim/                   # Neovim (single init.lua, full IDE)
-├── starship/               # Prompt config
-├── git/                    # Git config + global gitignore
+├── tmux/                   # Split-screen terminal config
+├── nvim/                   # Code editor config
+├── starship/               # Prompt (the line where you type)
+├── git/                    # Git config + global ignore rules
 ├── bat/                    # Syntax highlighting theme
-├── ghostty/                # Terminal emulator config
-└── lazygit/                # Git TUI config
+├── ghostty/                # Terminal app config
+└── lazygit/                # Visual git interface config
 ```
 
-Each directory is a [GNU Stow](https://www.gnu.org/software/stow/) package -- Stow creates symlinks from the repo into `$HOME`.
+Each folder is managed by [GNU Stow](https://www.gnu.org/software/stow/) — it creates links from this repo into your home directory, so updates are just a `git pull` away.
 
 ---
-
-## Tests
-
-```bash
-bash tests/test_install.sh
-```
-
-Validates install script integrity: deprecated flags, required functions, stow directories, strict mode, and security checks.
-
----
-
-## Uninstall
-
-```bash
-cd ~/dotfiles && ./uninstall.sh
-```
-
-Removes symlinks only. Your backups remain in `~/.dotfiles_backup/`.
 
 ## Update
 
@@ -333,8 +324,16 @@ Removes symlinks only. Your backups remain in `~/.dotfiles_backup/`.
 cd ~/dotfiles && git pull && ./install.sh
 ```
 
+## Uninstall
+
+```bash
+cd ~/dotfiles && ./uninstall.sh
+```
+
+Only removes the config links. Your backups stay safe in `~/.dotfiles_backup/`.
+
 ---
 
 <p align="center">
-  <sub>Built with Catppuccin Mocha, managed with GNU Stow, powered by Homebrew.</sub>
+  <sub>Built with Catppuccin Mocha &middot; Managed with GNU Stow &middot; Powered by Homebrew</sub>
 </p>

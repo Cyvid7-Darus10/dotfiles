@@ -1,13 +1,14 @@
 Output demo.gif
 
 Set Shell "zsh"
-Set FontSize 14
+Set FontSize 16
 Set Width 1200
-Set Height 650
+Set Height 700
 Set Theme "Catppuccin Mocha"
 Set Padding 20
-Set TypingSpeed 40ms
+Set TypingSpeed 35ms
 Set CursorBlink false
+Set LoopOffset 99%
 
 # Initialize environment invisibly
 Hide
@@ -16,30 +17,30 @@ Enter
 Sleep 4s
 Show
 
-# Wait for starship prompt to render
-Sleep 1s
+# 1. Let the beautiful Starship prompt shine
+Sleep 2s
 
-# eza: file listing with icons and git status
-Type "eza -la --icons --git"
+# 2. Gorgeous file listing — icons, colors, git status (ls → eza)
+Type "ls"
+Enter
+Sleep 2.5s
+
+# 3. Tree view of the project with beautiful icons
+Type "lt"
 Enter
 Sleep 3s
 
-# eza: tree view of dotfiles structure
-Type "eza --tree --level=1 --icons"
+# 4. Syntax-highlighted file preview (cat → bat)
+Type "cat Brewfile"
 Enter
-Sleep 3s
+Sleep 3.5s
 
-# bat: syntax highlighted file preview
-Type "bat --line-range=1:20 --paging=never install.sh"
+# 5. Beautiful git diffs with syntax highlighting (delta)
+Type "gd HEAD~1"
 Enter
-Sleep 3s
+Sleep 3.5s
 
-# git log with graph
-Type "git log --oneline --graph --decorate -8"
-Enter
-Sleep 3s
-
-# zoxide: smart directory navigation
+# 6. Smart directory navigation — jump anywhere instantly
 Type "z ~"
 Enter
 Sleep 1s
@@ -47,7 +48,26 @@ Type "z dotfiles"
 Enter
 Sleep 2s
 
-# Done
-Type "echo 'Ready to code.'"
+# 7. Fuzzy file finder with live preview (Ctrl+T)
+Ctrl+T
+Sleep 2.5s
+Escape
+Sleep 1s
+
+# 8. Pretty git log with graph
+Type "gl"
 Enter
 Sleep 3s
+
+# 9. Quick weather check — one command
+Type "weather"
+Enter
+Sleep 3s
+
+# End — let the beauty sink in
+Type "clear"
+Enter
+Sleep 1s
+Type "echo '  All of this. One install command. Zero config.'"
+Enter
+Sleep 4s
