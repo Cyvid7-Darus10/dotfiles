@@ -105,6 +105,7 @@ backup_existing() {
     "$HOME/.config/starship.toml"
     "$HOME/.config/nvim/init.lua"
     "$HOME/.config/bat/config"
+    "$HOME/.config/git/ignore"
     "$HOME/.config/ghostty/config"
     "$HOME/.config/lazygit/config.yml"
   )
@@ -265,6 +266,25 @@ setup_atuin() {
   fi
 }
 
+# ─── Setup Ghostty Theme ─────────────────────────────────
+setup_ghostty() {
+  step "Ghostty Theme"
+  if command -v ghostty &>/dev/null; then
+    local THEME_DIR="$HOME/.config/ghostty/themes"
+    if [[ ! -f "$THEME_DIR/catppuccin-mocha" ]]; then
+      info "Installing Catppuccin Mocha theme for Ghostty..."
+      mkdir -p "$THEME_DIR"
+      curl -fsSL https://raw.githubusercontent.com/catppuccin/ghostty/main/themes/catppuccin-mocha.conf \
+        -o "$THEME_DIR/catppuccin-mocha"
+      success "Ghostty theme installed"
+    else
+      success "Ghostty theme already installed"
+    fi
+  else
+    warn "Ghostty not found, skipping theme install"
+  fi
+}
+
 # ─── Build bat cache (for Catppuccin theme) ──────────────
 setup_bat() {
   step "bat Theme Cache"
@@ -293,6 +313,7 @@ main() {
   setup_macos
   install_tmux_plugins
   setup_atuin
+  setup_ghostty
   setup_bat
 
   echo ""

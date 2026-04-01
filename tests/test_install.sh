@@ -58,6 +58,7 @@ REQUIRED_FUNCTIONS=(
   set_default_shell
   install_tmux_plugins
   setup_atuin
+  setup_ghostty
   setup_bat
   main
 )
@@ -111,6 +112,30 @@ for pkg in $STOW_PACKAGES; do
     fail "stow package directory missing: $pkg/"
   fi
 done
+
+# ─── Test: Backup list covers all stow config paths ─────
+echo ""
+echo "Backup coverage:"
+if grep -q '\.config/git/ignore' "$INSTALL_SCRIPT"; then
+  pass "backup list includes .config/git/ignore"
+else
+  fail "backup list missing .config/git/ignore (causes stow conflict)"
+fi
+
+# ─── Test: Ghostty theme install ─────────────────────────
+echo ""
+echo "Ghostty theme:"
+if grep -q 'catppuccin-mocha' "$INSTALL_SCRIPT"; then
+  pass "setup_ghostty downloads catppuccin-mocha theme"
+else
+  fail "catppuccin-mocha theme download missing from install"
+fi
+
+if grep -q '\.config/ghostty/themes' "$INSTALL_SCRIPT"; then
+  pass "ghostty themes directory is created"
+else
+  fail "ghostty themes directory not created"
+fi
 
 # ─── Test: No hardcoded secrets ──────────────────────────
 echo ""
